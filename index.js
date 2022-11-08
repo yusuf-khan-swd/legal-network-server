@@ -30,7 +30,9 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
   try {
     const servicesCollection = client.db('legalNetwork').collection('services');
+    const reviewsCollection = client.db('legalNetwork').collection('reviews');
 
+    // Services API END POINT
     app.post('/services', async (req, res) => {
       const service = req.body;
       const result = await servicesCollection.insertOne(service);
@@ -56,6 +58,12 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const result = await servicesCollection.findOne(query);
       res.send(result);
+    });
+
+    // reviews API ENDPOINT
+    app.post('/reviews', async (req, res) => {
+      const review = req.body;
+      res.send(review);
     });
   }
   finally {
