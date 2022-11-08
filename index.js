@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const app = express();
@@ -22,6 +23,21 @@ function verifyToken(req, res, next) {
     next();
   })
 }
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.tjl9nwy.mongodb.net/?retryWrites=true&w=majority`;
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+
+async function run() {
+  const servicesCollection = client.db('legalNetwork').collection('services');
+
+  app.post('/services', async (req, res) => {
+    const service = req.body;
+    const result = await servicesCollection.insertOne(service);
+    res.send(result);
+  });
+}
+
+run().catch(err => console.error('error: ', err))
 
 app.get('/jwt', (req, res) => {
   const email = req.query;
