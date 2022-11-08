@@ -80,7 +80,7 @@ async function run() {
       res.send(reviews);
     });
 
-    app.get('/my-reviews', verifyToken, (req, res) => {
+    app.get('/my-reviews', verifyToken, async (req, res) => {
       const email = req.query.email;
       const decodedEmail = req.decode.email;
 
@@ -92,8 +92,10 @@ async function run() {
         return res.status(403).send({ message: 'Forbidden access. Email is not matched.' });
       }
 
-      res.send({ review: 'This is review page' });
-
+      const query = { email: email };
+      const cursor = reviewsCollection.find(query);
+      const userReviews = await cursor.toArray();
+      res.send(userReviews);
     });
   }
   finally {
