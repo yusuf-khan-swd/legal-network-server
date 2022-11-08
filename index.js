@@ -28,13 +28,18 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@clu
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 async function run() {
-  const servicesCollection = client.db('legalNetwork').collection('services');
+  try {
+    const servicesCollection = client.db('legalNetwork').collection('services');
 
-  app.post('/services', async (req, res) => {
-    const service = req.body;
-    const result = await servicesCollection.insertOne(service);
-    res.send(result);
-  });
+    app.post('/services', async (req, res) => {
+      const service = req.body;
+      const result = await servicesCollection.insertOne(service);
+      res.send(result);
+    });
+  }
+  finally {
+
+  }
 }
 
 run().catch(err => console.error('error: ', err))
