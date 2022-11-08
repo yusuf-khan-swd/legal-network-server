@@ -32,6 +32,12 @@ async function run() {
     const servicesCollection = client.db('legalNetwork').collection('services');
     const reviewsCollection = client.db('legalNetwork').collection('reviews');
 
+    app.get('/jwt', (req, res) => {
+      const email = req.query;
+      const token = jwt.sign(email, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+      res.send({ token });
+    });
+
     // Services API END POINT
     app.post('/services', async (req, res) => {
       const service = req.body;
@@ -73,6 +79,22 @@ async function run() {
       const reviews = await cursor.toArray();
       res.send(reviews);
     });
+
+    app.get('/my-reviews', verifyToken, (req, res) => {
+      const email = req.query.email;
+      const decodedEmail = req.decode.email;
+
+      if (!req.query.email) {
+        return res.status(401).send({ message: 'Unauthorize access. Email is missing' });
+      }
+
+      if (decodedEmail !== email) {
+        return res.status(403).send({ message: 'Forbidden access. Email is not matched.' });
+      }
+
+      res.send({ review: 'This is review page' });
+
+    });
   }
   finally {
 
@@ -80,28 +102,6 @@ async function run() {
 }
 
 run().catch(err => console.error('error: ', err))
-
-app.get('/jwt', (req, res) => {
-  const email = req.query;
-  const token = jwt.sign(email, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
-  res.send({ token });
-});
-
-app.get('/reviews', verifyToken, (req, res) => {
-  const email = req.query.email;
-  const decodedEmail = req.decode.email;
-
-  if (!req.query.email) {
-    return res.status(401).send({ message: 'Unauthorize access. Email is missing' });
-  }
-
-  if (decodedEmail !== email) {
-    return res.status(403).send({ message: 'Forbidden access. Email is not matched.' });
-  }
-
-  res.send({ review: 'This is review page' });
-
-});
 
 app.get('/', (req, res) => {
   res.send('Legal Network Server Is Running.');
