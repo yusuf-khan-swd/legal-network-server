@@ -63,7 +63,8 @@ async function run() {
     // reviews API ENDPOINT
     app.post('/reviews', async (req, res) => {
       const review = req.body;
-      res.send(review);
+      const result = await reviewsCollection.insertOne(review);
+      res.send(result);
     });
   }
   finally {
