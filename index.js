@@ -32,13 +32,16 @@ app.get('/jwt', (req, res) => {
 app.get('/reviews', verifyToken, (req, res) => {
   const email = req.query.email;
   const decodedEmail = req.decode.email;
-  if (req.query.email) {
-    if (decodedEmail !== email) {
-      return res.status(403).send({ message: 'Forbidden access. Email is not matched.' });
-    }
 
-    res.send({ review: 'This is review page' });
+  if (!req.query.email) {
+    return res.status(401).send({ message: 'Unauthorize access. Email is missing' });
   }
+
+  if (decodedEmail !== email) {
+    return res.status(403).send({ message: 'Forbidden access. Email is not matched.' });
+  }
+
+  res.send({ review: 'This is review page' });
 
 });
 
