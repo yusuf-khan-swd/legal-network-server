@@ -36,6 +36,13 @@ async function run() {
       const result = await servicesCollection.insertOne(service);
       res.send(result);
     });
+
+    app.get('/popular-service', async (req, res) => {
+      const query = {};
+      const cursor = servicesCollection.find(query);
+      const popularService = await cursor.limit(3).toArray();
+      res.send(popularService);
+    });
   }
   finally {
 
