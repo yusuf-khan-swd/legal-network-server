@@ -37,11 +37,11 @@ async function run() {
       res.send(result);
     });
 
-    app.get('/popular-service', async (req, res) => {
+    app.get('/popular-services', async (req, res) => {
       const query = {};
       const cursor = servicesCollection.find(query);
-      const popularService = await cursor.limit(3).toArray();
-      res.send(popularService);
+      const popularServices = await cursor.limit(3).toArray();
+      res.send(popularServices);
     });
   }
   finally {
