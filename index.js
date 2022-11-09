@@ -122,13 +122,14 @@ async function run() {
 
     app.put('/my-review/:id', async (req, res) => {
       const id = req.params.id;
-      const { title, description } = req.body;
+      const { title, description, date } = req.body;
       const query = { _id: ObjectId(id) };
       const options = { upsert: true };
       const updateDoc = {
         $set: {
           title: title,
-          description: description
+          description: description,
+          date: date
         }
       };
 
