@@ -93,7 +93,14 @@ async function run() {
         return res.status(403).send({ message: 'Forbidden access. Email is not matched.' });
       }
 
-      const query = { email: email };
+      let query = {};
+      if (decodedEmail.includes('@')) {
+        query = { email: email };
+      }
+      else {
+        query = { name: email };
+      }
+
       const cursor = reviewsCollection.find(query);
       const userReviews = await cursor.toArray();
       res.send(userReviews);
