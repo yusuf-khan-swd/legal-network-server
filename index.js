@@ -47,14 +47,14 @@ async function run() {
 
     app.get('/popular-services', async (req, res) => {
       const query = {};
-      const cursor = servicesCollection.find(query);
+      const cursor = servicesCollection.find(query).sort({ date: -1 });
       const popularServices = await cursor.limit(3).toArray();
       res.send(popularServices);
     });
 
     app.get('/services', async (req, res) => {
       const query = {};
-      const cursor = servicesCollection.find(query);
+      const cursor = servicesCollection.find(query).sort({ date: -1 });
       const services = await cursor.toArray();
       res.send(services);
     });
