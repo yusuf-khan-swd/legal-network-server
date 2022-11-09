@@ -101,7 +101,7 @@ async function run() {
         query = { name: email };
       }
 
-      const cursor = reviewsCollection.find(query);
+      const cursor = reviewsCollection.find(query).sort({ date: -1 });
       const userReviews = await cursor.toArray();
       res.send(userReviews);
     });
