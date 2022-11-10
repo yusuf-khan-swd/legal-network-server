@@ -34,7 +34,7 @@ async function run() {
 
     app.get('/jwt', (req, res) => {
       const email = req.query;
-      const token = jwt.sign(email, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+      const token = jwt.sign(email, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
       res.send({ token });
     });
 
